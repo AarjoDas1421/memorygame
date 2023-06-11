@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.lang.Thread;
 
 /**
  * This is a template for making a Game with a top text panel, middle grid game,
@@ -17,6 +18,9 @@ public class Grid extends JFrame implements ActionListener {
 
   public int[] identity = {1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8}; 
   public int[] shuffledValues = shuffleArray(identity);
+  public int[] record = new int[2];
+  public int counter = 0;
+  public int[] index = new int[2];
   Random rand = new Random();
     public static void main(String[] args) {
         new Grid();
@@ -64,7 +68,9 @@ public class Grid extends JFrame implements ActionListener {
             board[i].setFont(f); //Font f is initialized above the constructor
             board[i].setBackground(Color.PINK); 
             gamePanel.add(board[i]); //add button to the board
+          
           //add counter to this loop
+          
           // add timer object so that the code knows that the user cannot flip more than two cards at a time
           //once the two cards are flipped, if(card1.parseInt)
         }
@@ -82,16 +88,52 @@ public class Grid extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < 16; i++) {
-            if (e.getSource() == board[i]) { //if button i is pressed
+      try{  
+      for (int i = 0; i < 16; i++) {
+          if(counter < 2){ 
+          if (e.getSource() == board[i]) { //if button i is pressed
                 board[i].setText("" + shuffledValues[i]);
+                 record[counter] = shuffledValues[i]; 
+                index[counter++] = i;
+                if(counter == 2){
+                Thread.sleep(3000);
+                }
               //use this method to store the last two numbers that have been clicked
               //if the two cards !=, then hide cards and store next two clicks
+          }  
+          }
+          else if(counter == 2){
+            if(record[0]==record[1]){
+             //add points scored here
+            //remove text from the index card
+              for(int k = 0; k<index.length; k++){
+                board[index[k]].setText("");
+                board[index[k]].setBackground(Color.GREEN); 
+                //change colour to green of index[k]
+                
+              }
+              
+              //exclude this indexing from the clickable cards
             }
+            else{
+              //minus points scored here
+              counter = 0;
+              record = new int[2];
+              for(int j = 0; j<index.length; j++){
+                board[index[j]].setText("");
+              }
+              index = new int[2];
+            }
+          }
         }
     }
+      catch(Exception ex){
+        System.out.println(ex);
+      }
 
 }
+}
+//use sleep counter
 //use counter variable to 
 //if card1 and card2 have the same value
 //both cards change into a different colour
